@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab6 - Grupo C</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f6f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .dashboard-header {
+        background-color: #2c3e50;
+        color: white;
+        padding: 30px;
+        text-align: left;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .dashboard-title {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 700;
+      }
+      .lead {
+        font-size: 20px;
+        color: #ecf0f1;
+        margin-top: 10px;
+      }
+      #chart-header {
+        display: flex;
+        align-items: left;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 800px;
+      }
+      #chart-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+      }
+      #chart {
+        width: 100%;
+        max-width: 800px;
+        height: 500px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+      }
+      #back-button {
+        display: none;
+        margin-top: 20px;
+        padding: 12px;
+        font-size: 16px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+      }
+      #back-button:hover {
+        background-color: #2980b9;
+      }
+      .card {
+        margin: 40px auto;
+        border: none;
+        overflow: hidden;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .card-header {
+        background-color: #34495e;
+        color: white;
+        padding: 20px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .card-body {
+        padding: 30px;
+        font-size: 16px;
+        color: #7f8c8d;
+        line-height: 1.6;
+      }
+      .header-info {
+        padding: 20px 50px;
+        background-color: #a4dceb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-info">
+      <table style="width: 100%; border: 0">
+        <tr>
+          <td style="text-align: left; vertical-align: top">
+            <table style="border: 0">
+              <tr>
+                <td style="width: 70px">
+                  <img
+                    src="brasao-ufcg.png"
+                    alt="Brasão UFCG"
+                    style="height: 60px"
+                  />
+                </td>
+                <td>
+                  <div style="line-height: 1.4">
+                    <div>
+                      <strong
+                        >UNIVERSIDADE FEDERAL DE CAMPINA GRANDE - UFCG</strong
+                      >
+                    </div>
+                    <div>
+                      CENTRO DE ENGENHARIA ELÉTRICA E INFORMÁTICA - CEEI
+                    </div>
+                    <div>UNIDADE ACADÊMICA DE SISTEMAS E COMPUTAÇÃO - UASC</div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+
+          <td style="text-align: right; vertical-align: top">
+            <div>Professor: Maxwell Guimar&atilde;es de Oliveira</div>
+            <div>Período: 2024.2</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="header">
+      <h2 style="text-align: center">
+        Projeto de Visualização Interativa de Dados
+      </h2>
+      <h4 style="text-align: center">
+        <u>Grupo C</u>: Amanda Carolina, Denilson Deivid, Larissa Rodrigues,
+        Luiz Augusto, Vitor Holanda &nbsp; &nbsp;
+      </h4>
+      <h2 style="text-align: center">
+        <span
+          style="
+            font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+          "
+          ><strong>
+            Movimentação portuária no Brasil em 2024: Um panorama interativo das
+            atracações por estado e mês</strong
+          ></span
+        >
+      </h2>
+      <p style="text-align: justify; padding: 10px 50px 10px 50px">
+        <strong>História a ser contada:</strong> O projeto busca apresentar o
+        volume de atracações em portos brasileiros ao longo do ano de 2024,
+        destacando quais estados e meses do ano tiveram maior movimentação. A
+        análise permite entender a dinâmica da atividade portuária no país,
+        observando os estados com maior número de atracações, bem como a
+        distribuição mensal dessas movimentações. A navegação interativa permite
+        identificar padrões, facilitando a percepção de como fatores
+        geográficos, logísticos ou econômicos podem influenciar o fluxo
+        portuário ao longo do ano.
+      </p>
+    </div>
+
+    <div
+      id="container"
+      style="max-width: 100%; height: 470px; padding: 10px 50px 10px 50px"
+    >
+      <div id="chart-container">
+        <div id="chart-header">
+          <h2 id="chart-title">Distribuição das atracações por estado</h2>
+          <button id="back-button">Voltar à visão geral</button>
+        </div>
+        <div id="chart"></div>
+      </div>
+    </div>
+
+    <div id="footer" style="height: 2%; margin-top: 150px">
+      <p style="text-align: justify; padding: 20px 50px 0px 50px">
+        <b>Dicas para interagir com a visualização</b>:
+      </p>
+      <ul style="padding: 0px 50px 10px 75px">
+        <li>
+          Clique em cada estado para ter mais detalhes sobre o número total de
+          atracações
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      const data = [
+        { name: 'Acre', value: 16, color: '#6e5fd6' },
+        { name: 'Alagoas', value: 383, color: '#e74266' },
+        { name: 'Amapá', value: 617, color: '#7eb4fe' },
+        { name: 'Amazonas', value: 12330, color: '#0b8b73' },
+        { name: 'Bahia', value: 2076, color: '#a848d1' },
+        { name: 'Ceará', value: 1648, color: '#3e7f42' },
+        { name: 'Espírito Santo', value: 2802, color: '#9c8a41' },
+        { name: 'Goiás', value: 726, color: '#1f99ed' },
+        { name: 'Maranhão', value: 1990, color: '#e83209' },
+        { name: 'Mato Grosso do Sul', value: 2020, color: '#cd3597' },
+        { name: 'Paraná', value: 2740, color: '#cbe514' },
+        { name: 'Paraíba', value: 105, color: '#577296' },
+        { name: 'Pará', value: 27792, color: '#58e500' },
+        { name: 'Pernambuco', value: 2220, color: '#90c6ca' },
+        { name: 'Rio Grande do Norte', value: 4397, color: '#611edc' },
+        { name: 'Rio Grande do Sul', value: 6837, color: '#b45d1a' },
+        { name: 'Rio de Janeiro', value: 21808, color: '#4691b1' },
+        { name: 'Rondônia', value: 5395, color: '#809108' },
+        { name: 'Santa Catarina', value: 2520, color: '#b4ee9e' },
+        { name: 'Sergipe', value: 471, color: '#e66a14' },
+        { name: 'São Paulo', value: 7828, color: '#0a43d9' }
+      ]
+
+      const heatmapData = {
+        Acre: [
+          ['T1', 'jan', 2],
+          ['T1', 'fev', 3],
+          ['T1', 'mar', 2],
+          ['T2', 'abr', 4],
+          ['T2', 'mai', 3],
+          ['T2', 'jun', null],
+          ['T3', 'jul', null],
+          ['T3', 'ago', null],
+          ['T3', 'set', null],
+          ['T4', 'out', null],
+          ['T4', 'nov', 1],
+          ['T4', 'dez', 1]
+        ],
+        Alagoas: [
+          ['T1', 'jan', 40],
+          ['T1', 'fev', 33],
+          ['T1', 'mar', 42],
+          ['T2', 'abr', 28],
+          ['T2', 'mai', 34],
+          ['T2', 'jun', 23],
+          ['T3', 'jul', 26],
+          ['T3', 'ago', 26],
+          ['T3', 'set', 26],
+          ['T4', 'out', 31],
+          ['T4', 'nov', 37],
+          ['T4', 'dez', 37]
+        ],
+        Amapá: [
+          ['T1', 'jan', 71],
+          ['T1', 'fev', 30],
+          ['T1', 'mar', 59],
+          ['T2', 'abr', 60],
+          ['T2', 'mai', 72],
+          ['T2', 'jun', 55],
+          ['T3', 'jul', 58],
+          ['T3', 'ago', 59],
+          ['T3', 'set', 54],
+          ['T4', 'out', 50],
+          ['T4', 'nov', 34],
+          ['T4', 'dez', 15]
+        ],
+        Amazonas: [
+          ['T1', 'jan', 1044],
+          ['T1', 'fev', 1076],
+          ['T1', 'mar', 1132],
+          ['T2', 'abr', 1100],
+          ['T2', 'mai', 1034],
+          ['T2', 'jun', 1019],
+          ['T3', 'jul', 1186],
+          ['T3', 'ago', 1016],
+          ['T3', 'set', 838],
+          ['T4', 'out', 888],
+          ['T4', 'nov', 985],
+          ['T4', 'dez', 1012]
+        ],
+        Bahia: [
+          ['T1', 'jan', 199],
+          ['T1', 'fev', 174],
+          ['T1', 'mar', 203],
+          ['T2', 'abr', 170],
+          ['T2', 'mai', 176],
+          ['T2', 'jun', 163],
+          ['T3', 'jul', 180],
+          ['T3', 'ago', 169],
+          ['T3', 'set', 175],
+          ['T4', 'out', 163],
+          ['T4', 'nov', 143],
+          ['T4', 'dez', 161]
+        ],
+        Ceará: [
+          ['T1', 'jan', 129],
+          ['T1', 'fev', 119],
+          ['T1', 'mar', 155],
+          ['T2', 'abr', 153],
+          ['T2', 'mai', 145],
+          ['T2', 'jun', 129],
+          ['T3', 'jul', 132],
+          ['T3', 'ago', 142],
+          ['T3', 'set', 131],
+          ['T4', 'out', 145],
+          ['T4', 'nov', 137],
+          ['T4', 'dez', 131]
+        ],
+        'Espírito Santo': [
+          ['T1', 'jan', 228],
+          ['T1', 'fev', 208],
+          ['T1', 'mar', 225],
+          ['T2', 'abr', 218],
+          ['T2', 'mai', 240],
+          ['T2', 'jun', 258],
+          ['T3', 'jul', 230],
+          ['T3', 'ago', 272],
+          ['T3', 'set', 238],
+          ['T4', 'out', 235],
+          ['T4', 'nov', 218],
+          ['T4', 'dez', 232]
+        ],
+        Goiás: [
+          ['T1', 'jan', null],
+          ['T1', 'fev', 56],
+          ['T1', 'mar', 76],
+          ['T2', 'abr', 68],
+          ['T2', 'mai', 68],
+          ['T2', 'jun', 56],
+          ['T3', 'jul', 80],
+          ['T3', 'ago', 76],
+          ['T3', 'set', 72],
+          ['T4', 'out', 64],
+          ['T4', 'nov', 88],
+          ['T4', 'dez', 22]
+        ],
+        Maranhão: [
+          ['T1', 'jan', 148],
+          ['T1', 'fev', 115],
+          ['T1', 'mar', 144],
+          ['T2', 'abr', 139],
+          ['T2', 'mai', 165],
+          ['T2', 'jun', 177],
+          ['T3', 'jul', 179],
+          ['T3', 'ago', 197],
+          ['T3', 'set', 186],
+          ['T4', 'out', 172],
+          ['T4', 'nov', 186],
+          ['T4', 'dez', 182]
+        ],
+        'Mato Grosso do Sul': [
+          ['T1', 'jan', 171],
+          ['T1', 'fev', 162],
+          ['T1', 'mar', 260],
+          ['T2', 'abr', 185],
+          ['T2', 'mai', 259],
+          ['T2', 'jun', 257],
+          ['T3', 'jul', 224],
+          ['T3', 'ago', 102],
+          ['T3', 'set', 16],
+          ['T4', 'out', 30],
+          ['T4', 'nov', 136],
+          ['T4', 'dez', 218]
+        ],
+        Paraná: [
+          ['T1', 'jan', 225],
+          ['T1', 'fev', 225],
+          ['T1', 'mar', 237],
+          ['T2', 'abr', 220],
+          ['T2', 'mai', 226],
+          ['T2', 'jun', 250],
+          ['T3', 'jul', 224],
+          ['T3', 'ago', 238],
+          ['T3', 'set', 238],
+          ['T4', 'out', 230],
+          ['T4', 'nov', 209],
+          ['T4', 'dez', 218]
+        ],
+        Paraíba: [
+          ['T1', 'jan', 11],
+          ['T1', 'fev', 9],
+          ['T1', 'mar', 8],
+          ['T2', 'abr', 9],
+          ['T2', 'mai', 10],
+          ['T2', 'jun', 7],
+          ['T3', 'jul', 11],
+          ['T3', 'ago', 6],
+          ['T3', 'set', 11],
+          ['T4', 'out', 7],
+          ['T4', 'nov', 7],
+          ['T4', 'dez', 9]
+        ],
+        Pará: [
+          ['T1', 'jan', 1880],
+          ['T1', 'fev', 2076],
+          ['T1', 'mar', 2483],
+          ['T2', 'abr', 2464],
+          ['T2', 'mai', 2543],
+          ['T2', 'jun', 2497],
+          ['T3', 'jul', 2792],
+          ['T3', 'ago', 2825],
+          ['T3', 'set', 2473],
+          ['T4', 'out', 1996],
+          ['T4', 'nov', 1804],
+          ['T4', 'dez', 1959]
+        ],
+        Pernambuco: [
+          ['T1', 'jan', 167],
+          ['T1', 'fev', 170],
+          ['T1', 'mar', 193],
+          ['T2', 'abr', 177],
+          ['T2', 'mai', 202],
+          ['T2', 'jun', 171],
+          ['T3', 'jul', 196],
+          ['T3', 'ago', 213],
+          ['T3', 'set', 171],
+          ['T4', 'out', 186],
+          ['T4', 'nov', 181],
+          ['T4', 'dez', 193]
+        ],
+        'Rio Grande do Norte': [
+          ['T1', 'jan', 368],
+          ['T1', 'fev', 382],
+          ['T1', 'mar', 377],
+          ['T2', 'abr', 339],
+          ['T2', 'mai', 386],
+          ['T2', 'jun', 322],
+          ['T3', 'jul', 349],
+          ['T3', 'ago', 362],
+          ['T3', 'set', 390],
+          ['T4', 'out', 374],
+          ['T4', 'nov', 338],
+          ['T4', 'dez', 410]
+        ],
+        'Rio Grande do Sul': [
+          ['T1', 'jan', 609],
+          ['T1', 'fev', 569],
+          ['T1', 'mar', 619],
+          ['T2', 'abr', 609],
+          ['T2', 'mai', 281],
+          ['T2', 'jun', 550],
+          ['T3', 'jul', 616],
+          ['T3', 'ago', 533],
+          ['T3', 'set', 601],
+          ['T4', 'out', 636],
+          ['T4', 'nov', 596],
+          ['T4', 'dez', 618]
+        ],
+        'Rio de Janeiro': [
+          ['T1', 'jan', 1592],
+          ['T1', 'fev', 1761],
+          ['T1', 'mar', 1588],
+          ['T2', 'abr', 1715],
+          ['T2', 'mai', 1698],
+          ['T2', 'jun', 1657],
+          ['T3', 'jul', 1763],
+          ['T3', 'ago', 1812],
+          ['T3', 'set', 1897],
+          ['T4', 'out', 2127],
+          ['T4', 'nov', 2052],
+          ['T4', 'dez', 2146]
+        ],
+        Rondônia: [
+          ['T1', 'jan', 515],
+          ['T1', 'fev', 553],
+          ['T1', 'mar', 551],
+          ['T2', 'abr', 562],
+          ['T2', 'mai', 605],
+          ['T2', 'jun', 545],
+          ['T3', 'jul', 569],
+          ['T3', 'ago', 475],
+          ['T3', 'set', 177],
+          ['T4', 'out', 110],
+          ['T4', 'nov', 272],
+          ['T4', 'dez', 461]
+        ],
+        'Santa Catarina': [
+          ['T1', 'jan', 213],
+          ['T1', 'fev', 206],
+          ['T1', 'mar', 218],
+          ['T2', 'abr', 216],
+          ['T2', 'mai', 214],
+          ['T2', 'jun', 204],
+          ['T3', 'jul', 189],
+          ['T3', 'ago', 209],
+          ['T3', 'set', 196],
+          ['T4', 'out', 226],
+          ['T4', 'nov', 210],
+          ['T4', 'dez', 219]
+        ],
+        Sergipe: [
+          ['T1', 'jan', 29],
+          ['T1', 'fev', 37],
+          ['T1', 'mar', 40],
+          ['T2', 'abr', 39],
+          ['T2', 'mai', 37],
+          ['T2', 'jun', 34],
+          ['T3', 'jul', 48],
+          ['T3', 'ago', 34],
+          ['T3', 'set', 43],
+          ['T4', 'out', 42],
+          ['T4', 'nov', 47],
+          ['T4', 'dez', 41]
+        ],
+        'São Paulo': [
+          ['T1', 'jan', 555],
+          ['T1', 'fev', 627],
+          ['T1', 'mar', 716],
+          ['T2', 'abr', 666],
+          ['T2', 'mai', 666],
+          ['T2', 'jun', 679],
+          ['T3', 'jul', 662],
+          ['T3', 'ago', 641],
+          ['T3', 'set', 676],
+          ['T4', 'out', 677],
+          ['T4', 'nov', 654],
+          ['T4', 'dez', 609]
+        ]
+      }
+
+      const chart = echarts.init(document.getElementById('chart'))
+      const backButton = document.getElementById('back-button')
+      const chartTitle = document.getElementById('chart-title')
+
+      function voltarInicio() {
+        // Limpar o gráfico de calor
+        chart.clear()
+
+        // Exibir o gráfico de pizza novamente
+        backButton.style.display = 'none'
+        showPieChart()
+      }
+
+      function showPieChart() {
+        chart.setOption({
+          title: {
+            left: 'center'
+          },
+          tooltip: {
+            trigger: 'item'
+          },
+
+          legend: {
+            bottom: -5,
+            left: 'center',
+            textStyle: {
+              fontSize: 12,
+              color: '#333'
+            }
+          },
+
+          series: [
+            {
+              type: 'pie',
+              radius: ['40%', '60%'],
+              avoidLabelOverlap: false,
+              itemStyle: {
+                borderRadius: 10,
+                borderColor: '#fff',
+                borderWidth: 2
+              },
+              data: data.map(d => ({
+                name: d.name,
+                value: d.value,
+                itemStyle: { color: d.color }
+              }))
+            }
+          ]
+        })
+
+        backButton.style.display = 'none'
+        chartTitle.innerText = 'Distribuição de atracações por Estado'
+      }
+
+      function showHeatmap(state) {
+        const dataForState = heatmapData[state]
+        const months = [
+          'jan',
+          'fev',
+          'mar',
+          'abr',
+          'mai',
+          'jun',
+          'jul',
+          'ago',
+          'set',
+          'out',
+          'nov',
+          'dez'
+        ]
+        const seriesData = dataForState.map(([quarter, month, value]) => [
+          months.indexOf(month),
+          ['T1', 'T2', 'T3', 'T4'].indexOf(quarter),
+          value ?? '-'
+        ])
+
+        chart.setOption({
+          title: {
+            left: 'center'
+          },
+          tooltip: {
+            position: 'top'
+          },
+          grid: {
+            height: '50%',
+            top: '10%'
+          },
+          xAxis: {
+            type: 'category',
+            data: months,
+            splitArea: {
+              show: true
+            }
+          },
+          yAxis: {
+            type: 'category',
+            data: ['T1', 'T2', 'T3', 'T4'],
+            splitArea: {
+              show: true
+            }
+          },
+          visualMap: {
+            min: 0,
+            max: 3000,
+            calculable: true,
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '5%'
+          },
+          series: [
+            {
+              type: 'heatmap',
+              data: seriesData,
+              label: {
+                show: true
+              },
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              }
+            }
+          ]
+        })
+
+        backButton.style.display = 'inline-block'
+        chartTitle.innerText = `Atracações por mês em ${state}`
+      }
+
+      chart.on('click', function (params) {
+        if (params.componentType === 'series' && params.seriesType === 'pie') {
+          showHeatmap(params.name)
+        }
+      })
+
+      backButton.addEventListener('click', voltarInicio)
+
+      // Exibir o gráfico de pizza inicialmente
+      showPieChart()
+    </script>
+  </body>
+</html>
