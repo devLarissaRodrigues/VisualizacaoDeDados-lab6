@@ -11,4 +11,5 @@ Exibe a quantidade de atracações recebidas em um ano específico organizadas p
 Mostra o número de atracações a cada mês no estado selecionado.
 
 #### Endereço eletrônico da visualização: 
-[Clique aqui para visualizar a movimentação portuária no Brasil em 2024](https://amandacls.github.io/visualizacao-de-dados-lab6/)
+[Clique aqui para visualizar a movimentação portuária no Brasil em 2024 seguindo template obrigatório](https://amandacls.github.io/visualizacao-de-dados-lab6/)</br>
+[Clique aqui para visualizar a movimentação portuária no Brasil em 2024 (com alterações no cabeçalho do site)](https://devlarissarodrigues.github.io/VisualizacaoDeDados-lab6/)
